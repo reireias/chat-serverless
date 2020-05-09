@@ -4,6 +4,7 @@ service:
 plugins:
   - serverless-s3-sync
   - serverless-apigw-binary
+  - serverless-dynamodb-local
 
 package:
   individually: true
@@ -49,6 +50,17 @@ provider:
     AUTH0_CLIENT_ID: ${file(./secrets.json):AUTH0_CLIENT_ID}
     AUTH0_DOMAIN: ${file(./secrets.json):AUTH0_DOMAIN}
     AUTH0_CLIENT_PUBLIC_KEY: ${file(./public_key)}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/*"
 
 custom:
   stackId: gjfyl6
@@ -63,6 +75,19 @@ custom:
   apigwBinary:
     types:
       - '*/*'
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: true
+    seed:
+      development:
+        sources:
+          - table: rooms
+            sources: [./migrations/rooms.json]
 
 functions:
   auth:
@@ -107,6 +132,19 @@ functions:
 
 resources:
   Resources:
+    RoomsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: rooms
+        AttributeDefinitions:
+          - AttributeName: owner
+            AttributeType: S
+        KeySchema:
+          - AttributeName: owner
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
     ClientAssetsBucket:
       Type: AWS::S3::Bucket
       Properties:

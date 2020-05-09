@@ -57,32 +57,28 @@
         </v-list>
       </v-col>
     </v-row>
-    <v-btn @click="getProfile">profile</v-btn>
-    <v-btn @click="debug">get room</v-btn>
-    <v-btn @click="debugPublic">public</v-btn>
-    <v-btn @click="debugPrivate">private</v-btn>
-    <v-btn @click="showStore">store</v-btn>
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import axios from 'axios'
 
 export default {
   data() {
     return {
       name: undefined,
+      loading: true,
       rules: {
         required: (value) => !!value || 'Required',
       },
     }
   },
   computed: {
-    ...mapGetters(['user', 'loading', 'rooms', 'isAuth']),
+    ...mapGetters(['user', 'rooms']),
   },
-  created() {
-    // this.getRooms()
+  mounted() {
+    this.getRooms()
+    this.loading = false
   },
   methods: {
     onCreate() {
@@ -93,33 +89,6 @@ export default {
       this.deleteRoom({ id: room.id })
     },
     ...mapActions(['addRoom', 'deleteRoom', 'getRooms']),
-    async debug() {
-      const res = await axios.get('api/rooms')
-      console.log(res.data)
-    },
-    async debugPublic() {
-      const res = await axios.get('api/public')
-      console.log(res.data)
-    },
-    async debugPrivate() {
-      const res = await axios.get('api/private', {
-        headers: {
-          Authorization: `Bearer ${this.$store.state.auth.idToken}`,
-        },
-      })
-      console.log(res.data)
-    },
-    showStore() {
-      console.log(this.$store.state)
-    },
-    async getProfile() {
-      if (this.isAuth) {
-        const profile = await this.$auth0Lock.getProfile(
-          this.$store.state.auth.accessToken
-        )
-        console.log(profile)
-      }
-    },
   },
 }
 </script>

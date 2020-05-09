@@ -1,5 +1,8 @@
 import axios from 'axios'
 import cookieparser from 'cookieparser'
+import nuxtConfig from '~/nuxt.config.js'
+
+const base = nuxtConfig.router.base
 
 export const state = () => ({
   auth: null,
@@ -30,20 +33,20 @@ export const mutations = {
 
 export const actions = {
   async addRoom({ dispatch }, payload) {
-    await axios.post('/api/rooms', { name: payload.name })
+    await axios.post(`${base}/api/rooms`, { name: payload.name })
     dispatch('getRooms')
   },
   async deleteRoom({ dispatch }, payload) {
-    await axios.delete(`/api/rooms/${payload.id}`)
+    await axios.delete(`${base}/api/rooms/${payload.id}`)
     dispatch('getRooms')
   },
   async getRooms({ commit }) {
-    const res = await axios.get('/api/rooms')
+    const res = await axios.get(`${base}/api/rooms`)
     const payload = res.data
     commit('setRooms', payload)
   },
   async getRoom({ commit }, payload) {
-    const res = await axios.get(`/api/rooms/${payload.id}`)
+    const res = await axios.get(`${base}/api/rooms/${payload.id}`)
     commit('setRoom', {
       name: res.data.name,
     })

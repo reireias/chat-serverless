@@ -92,3 +92,4 @@ sw.*
 secrets.json
 public_key
 .envrc
+.dynamodb

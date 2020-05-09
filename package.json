@@ -5,7 +5,7 @@
   "author": "reireias",
   "private": true,
   "scripts": {
-    "dev": "NODE_ENV=development nodemon local.js --watch server",
+    "dev": "NODE_ENV=development DYNAMODB_ENDPOINT=http://localhost:8000 nodemon local.js --watch server",
     "build": "NODE_ENV=production nuxt build",
     "postbuild": "webpack",
     "start": "NODE_ENV=production node .nuxt/dist/local.js",
@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
+    "@nuxtjs/vuetify": "^1.0.0",
     "auth0-lock": "^11.23.1",
+    "aws-sdk": "^2.673.0",
     "aws-serverless-express": "^3.3.8",
     "cookieparser": "^0.1.0",
     "core-js": "^2.6.5",
@@ -29,7 +31,6 @@
   "devDependencies": {
     "@nuxtjs/eslint-config": "^2.0.0",
     "@nuxtjs/eslint-module": "^2.0.0",
-    "@nuxtjs/vuetify": "^1.0.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.10.0",
@@ -38,6 +39,7 @@
     "nodemon": "^2.0.3",
     "prettier": "^2.0.5",
     "serverless-apigw-binary": "^0.4.4",
+    "serverless-dynamodb-local": "^0.2.39",
     "serverless-s3-sync": "^1.14.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
