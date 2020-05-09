@@ -64,7 +64,7 @@ export const actions = {
 
 export const getters = {
   isAuth(state) {
-    return state.auth !== null
+    return state.auth && state.auth.accessToken && state.auth.idToken
   },
   user(state) {
     return state.user

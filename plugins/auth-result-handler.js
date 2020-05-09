@@ -2,6 +2,7 @@ import Cookie from 'js-cookie'
 
 export default ({ store }, inject) => {
   inject('handleAuthResult', (authResult) => {
+    console.log(authResult)
     const accessToken = authResult.accessToken
     const idToken = authResult.idToken
 

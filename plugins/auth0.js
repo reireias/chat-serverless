@@ -56,6 +56,7 @@ export default (_, inject) => {
     },
 
     getProfile(accessToken) {
+      console.log(accessToken)
       return new Promise((resolve, reject) => {
         lock.getUserInfo(accessToken, (err, profile) => {
           if (err) return reject(err)

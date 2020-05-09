@@ -8,6 +8,36 @@ plugins:
 package:
   individually: true
   excludeDevDependencies: true
+  include:
+    - .nuxt/dist/handler.js
+    - .nuxt/dist/auth.js
+    - .nuxt/dist/server/**
+  exclude:
+    - .editorconfig
+    - .eslintrc.js
+    - .git/**
+    - .gitignore
+    - .nuxt/**
+    - .prettierrc
+    - .serverless
+    - LICENSE
+    - README.md
+    - assets/**
+    - components/**
+    - dist/**
+    - layouts/**
+    - local.js
+    - middleware/**
+    - nuxt.config.js
+    - package.json
+    - pages/**
+    - plugins/**
+    - server/**
+    - serverless.yml
+    - static/**
+    - store/**
+    - webpack.config.js
+    - yarn.lock
 
 provider:
   name: aws
@@ -17,6 +47,7 @@ provider:
   memorySize: 2048
   environment:
     AUTH0_CLIENT_ID: ${file(./secrets.json):AUTH0_CLIENT_ID}
+    AUTH0_DOMAIN: ${file(./secrets.json):AUTH0_DOMAIN}
     AUTH0_CLIENT_PUBLIC_KEY: ${file(./public_key)}
 
 custom:
@@ -34,6 +65,9 @@ custom:
       - '*/*'
 
 functions:
+  auth:
+    name: ${self:service}-${self:custom.stackId}-${self:provider.stage}-auth
+    handler: .nuxt/dist/auth.handler
   renderer:
     name: ${self:service}-${self:custom.stackId}-${self:provider.stage}-renderer
     handler: .nuxt/dist/handler.handler
@@ -41,40 +75,14 @@ functions:
     timeout: 30
     environment:
       NODE_ENV: production
-    package:
-      include:
-        - .nuxt/dist/handler.js
-        - .nuxt/dist/server/**
-      exclude:
-        - .editorconfig
-        - .eslintrc.js
-        - .git/**
-        - .gitignore
-        - .nuxt/**
-        - .prettierrc
-        - .serverless
-        - LICENSE
-        - README.md
-        - assets/**
-        - components/**
-        - dist/**
-        - layouts/**
-        - local.js
-        - middleware/**
-        - nuxt.config.js
-        - package.json
-        - pages/**
-        - plugins/**
-        - server/**
-        - serverless.yml
-        - static/**
-        - store/**
-        - webpack.config.js
-        - yarn.lock
     events:
       - http:
           path: /
           method: any
+      - http:
+          path: api/private
+          method: any
+          authorizer: auth
       - http:
           path: /{proxy+}
           method: any

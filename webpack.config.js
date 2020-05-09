@@ -5,6 +5,7 @@ module.exports = {
   mode: 'production',
   entry: {
     handler: path.resolve(__dirname, './server/handler.js'),
+    auth: path.resolve(__dirname, './server/auth.js'),
     local: path.resolve(__dirname, './local.js'),
   },
   output: {
