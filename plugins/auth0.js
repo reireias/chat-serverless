@@ -6,7 +6,6 @@ const lock = new Auth0Lock(
   {
     container: 'auth0',
     auth: {
-      // redirectUrl: 'http://localhost:3000/callback', // If not specified, defaults to the current page
       responseType: 'token id_token',
       params: {
         scope: 'openid profile email', // Learn about scopes: https://auth0.com/docs/scopes
