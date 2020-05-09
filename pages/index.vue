@@ -78,6 +78,12 @@ export default {
   created() {
     // this.getRooms()
   },
+  async mounted() {
+    const profile = await this.$auth0Lock.getProfile(
+      this.$store.state.auth.accessToken
+    )
+    console.log(profile)
+  },
   methods: {
     onCreate() {
       this.addRoom({ name: this.name })

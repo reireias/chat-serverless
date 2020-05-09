@@ -2,6 +2,10 @@ const colors = require('vuetify/es5/util/colors').default
 
 module.exports = {
   mode: 'universal',
+  env: {
+    AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
+    AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
+  },
   /*
    ** Headers of the page
    */
@@ -30,7 +34,10 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: [
+    { src: '~/plugins/auth0', ssr: false },
+    { src: '~/plugins/auth-result-handler', ssr: false },
+  ],
   /*
    ** Nuxt.js dev-modules
    */
@@ -74,6 +81,7 @@ module.exports = {
   },
   router: {
     base: '/dev',
+    middleware: ['auth'],
   },
   /*
    ** Build configuration

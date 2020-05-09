@@ -1,6 +1,8 @@
 import axios from 'axios'
+import cookieparser from 'cookieparser'
 
 export const state = () => ({
+  auth: null,
   loading: true,
   user: null,
   rooms: [],
@@ -8,6 +10,12 @@ export const state = () => ({
 })
 
 export const mutations = {
+  setAuth(state, auth) {
+    state.auth = auth
+  },
+  resetAuth(state) {
+    state.auth = null
+  },
   setUser(state, user) {
     state.user = user
     state.loading = false
@@ -40,9 +48,24 @@ export const actions = {
       name: res.data.name,
     })
   },
+  nuxtServerInit({ commit }, { req }) {
+    if (process.server && req.headers.cookie) {
+      const cookies = cookieparser.parse(req.headers.cookie)
+      const accessToken = cookies._tkn
+      const idToken = cookies._itkn
+
+      commit('setAuth', {
+        accessToken,
+        idToken,
+      })
+    }
+  },
 }
 
 export const getters = {
+  isAuth(state) {
+    return state.auth !== null
+  },
   user(state) {
     return state.user
   },

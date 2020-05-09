@@ -5,20 +5,23 @@
   "author": "reireias",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon local.js --watch server",
+    "dev": "NODE_ENV=development nodemon local.js --watch server",
     "build": "NODE_ENV=production nuxt build",
     "postbuild": "webpack",
-    "start": "cross-env NODE_ENV=production node .nuxt/dist/local.js",
+    "start": "NODE_ENV=production node .nuxt/dist/local.js",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "deploy": "NODE_ENV=production sls deploy"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
+    "auth0-lock": "^11.23.1",
     "aws-serverless-express": "^3.3.8",
-    "cross-env": "^5.2.0",
+    "cookieparser": "^0.1.0",
+    "core-js": "^2.6.5",
     "express": "^4.16.4",
     "express-asyncify": "^1.0.1",
+    "js-cookie": "^2.2.1",
     "moment": "^2.25.3",
     "nuxt": "^2.0.0"
   },
