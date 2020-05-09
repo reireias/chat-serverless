@@ -42,22 +42,32 @@ functions:
       include:
         - .nuxt/dist/handler.js
         - .nuxt/dist/server/**
-      # exclude:
-      #   - .nuxt/**
-      #   - .git/**
-      #   - README.md
-      #   - components/**
-      #   - layouts/**
-      #   - nuxt.config.js
-      #   - pages/**
-      #   - scripts/**
-      #   - store/**
-      #   - assets/**
-      #   - middleware/**
-      #   - plugins/**
-      #   - server/**
-      #   - static/**
-      #   - test/**
+      exclude:
+        - .editorconfig
+        - .eslintrc.js
+        - .git/**
+        - .gitignore
+        - .nuxt/**
+        - .prettierrc
+        - .serverless
+        - LICENSE
+        - README.md
+        - assets/**
+        - components/**
+        - dist/**
+        - layouts/**
+        - local.js
+        - middleware/**
+        - nuxt.config.js
+        - package.json
+        - pages/**
+        - plugins/**
+        - server/**
+        - serverless.yml
+        - static/**
+        - store/**
+        - webpack.config.js
+        - yarn.lock
     events:
       - http:
           path: /
