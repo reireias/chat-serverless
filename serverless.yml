@@ -39,6 +39,7 @@ package:
     - store/**
     - webpack.config.js
     - yarn.lock
+    - node_modules/aws-sdk/**
 
 provider:
   name: aws
@@ -105,12 +106,12 @@ functions:
           path: /
           method: any
       - http:
-          path: api/private
-          method: any
-          authorizer: auth
-      - http:
           path: /{proxy+}
           method: any
+      - http:
+          path: /api/{proxy+}
+          method: any
+          authorizer: auth
       - http:
           path: /_nuxt/{proxy+}
           method: any
@@ -139,9 +140,13 @@ resources:
         AttributeDefinitions:
           - AttributeName: owner
             AttributeType: S
+          - AttributeName: id
+            AttributeType: S
         KeySchema:
           - AttributeName: owner
             KeyType: HASH
+          - AttributeName: id
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

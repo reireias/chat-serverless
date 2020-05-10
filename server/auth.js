@@ -6,6 +6,10 @@ const AUTH0_CLIENT_PUBLIC_KEY = process.env.AUTH0_CLIENT_PUBLIC_KEY
 const generatePolicy = (principalId, effect, resource) => {
   const authResponse = {}
   authResponse.principalId = principalId
+  // authResponse.picture = picture
+  // NOTE: allow /dev/*/api/*
+  const split = resource.split('/')
+  const allowArn = `${split[0]}/dev/*/api/*`
   if (effect && resource) {
     const policyDocument = {}
     policyDocument.Version = '2012-10-17'
@@ -13,7 +17,7 @@ const generatePolicy = (principalId, effect, resource) => {
     const statementOne = {}
     statementOne.Action = 'execute-api:Invoke'
     statementOne.Effect = effect
-    statementOne.Resource = resource
+    statementOne.Resource = allowArn
     policyDocument.Statement[0] = statementOne
     authResponse.policyDocument = policyDocument
   }
