@@ -19,6 +19,7 @@
     "auth0-lock": "^11.23.1",
     "aws-sdk": "^2.673.0",
     "aws-serverless-express": "^3.3.8",
+    "body-parser": "^1.19.0",
     "cookieparser": "^0.1.0",
     "core-js": "^2.6.5",
     "express": "^4.16.4",
@@ -26,7 +27,8 @@
     "js-cookie": "^2.2.1",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.25.3",
-    "nuxt": "^2.0.0"
+    "nuxt": "^2.0.0",
+    "uuid": "^8.0.0"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^2.0.0",

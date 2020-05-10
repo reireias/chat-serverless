@@ -3,6 +3,9 @@ import cookieparser from 'cookieparser'
 import nuxtConfig from '~/nuxt.config.js'
 
 const base = nuxtConfig.router.base
+const getHeaders = (idToken) => {
+  return { Authorization: `Bearer ${idToken}` }
+}
 
 export const state = () => ({
   auth: null,
@@ -32,21 +35,25 @@ export const mutations = {
 }
 
 export const actions = {
-  async addRoom({ dispatch }, payload) {
-    await axios.post(`${base}/api/rooms`, { name: payload.name })
+  async addRoom({ dispatch, state }, payload) {
+    const headers = getHeaders(state.auth.idToken)
+    await axios.post(`${base}/api/rooms`, { name: payload.name }, { headers })
     dispatch('getRooms')
   },
-  async deleteRoom({ dispatch }, payload) {
-    await axios.delete(`${base}/api/rooms/${payload.id}`)
+  async deleteRoom({ dispatch, state }, payload) {
+    const headers = getHeaders(state.auth.idToken)
+    await axios.delete(`${base}/api/rooms/${payload.id}`, { headers })
     dispatch('getRooms')
   },
-  async getRooms({ commit }) {
-    const res = await axios.get(`${base}/api/rooms`)
+  async getRooms({ commit, state }) {
+    const headers = getHeaders(state.auth.idToken)
+    const res = await axios.get(`${base}/api/rooms`, { headers })
     const payload = res.data
     commit('setRooms', payload)
   },
-  async getRoom({ commit }, payload) {
-    const res = await axios.get(`${base}/api/rooms/${payload.id}`)
+  async getRoom({ commit, state }, payload) {
+    const headers = getHeaders(state.auth.idToken)
+    const res = await axios.get(`${base}/api/rooms/${payload.id}`, { headers })
     commit('setRoom', {
       name: res.data.name,
     })

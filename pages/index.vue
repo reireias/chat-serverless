@@ -57,11 +57,13 @@
         </v-list>
       </v-col>
     </v-row>
+    <v-btn @click="debug">private</v-btn>
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import axios from 'axios'
 
 export default {
   data() {
@@ -89,6 +91,14 @@ export default {
       this.deleteRoom({ id: room.id })
     },
     ...mapActions(['addRoom', 'deleteRoom', 'getRooms']),
+    async debug() {
+      const res = await axios.get('api/private', {
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.idToken}`,
+        },
+      })
+      console.log(res.data)
+    },
   },
 }
 </script>

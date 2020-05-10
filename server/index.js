@@ -1,6 +1,7 @@
 const express = require('express')
 const asyncify = require('express-asyncify')
 const { Nuxt } = require('nuxt')
+const bodyParser = require('body-parser')
 const config = require('../nuxt.config.js')
 const { customDomainAdaptorMiddleware } = require('./middleware')
 const apiRouter = require('./api')
@@ -11,6 +12,7 @@ config.dev = process.env.NODE_ENV !== 'production'
 const nuxt = new Nuxt(config)
 
 let isNuxtReady = false
+app.use(bodyParser.json())
 app.use(customDomainAdaptorMiddleware)
 if (!config.dev) {
   // TODO: add mock for local dev
