@@ -1,6 +1,6 @@
 export default ({ route, store, redirect }) => {
   if (store.getters.isAuth) {
-    if (route.name !== 'index') {
+    if (route.name === 'login') {
       redirect('/')
     }
   } else if (route.name !== 'login') {

@@ -66,7 +66,9 @@ export default {
   computed: {
     ...mapGetters(['user', 'room']),
   },
-  created() {},
+  mounted() {
+    this.getRoom({ id: this.$nuxt.$route.params.id })
+  },
   methods: {
     onPost() {},
     format(timestamp) {

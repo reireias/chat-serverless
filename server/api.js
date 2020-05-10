@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid')
 const { DynamoDB } = require('aws-sdk')
 
 const ROOMS_TABLE = 'rooms'
+const ID_INDEX = 'rooms_id'
 
 const options = { region: 'ap-northeast-1' }
 if (process.env.DYNAMODB_ENDPOINT) {
@@ -40,12 +41,17 @@ router.get('/rooms', async (req, res) => {
 router.get('/rooms/:id', async (req, res) => {
   const params = {
     TableName: ROOMS_TABLE,
-    Key: {
-      id: req.params.id,
-    }
+    IndexName: ID_INDEX,
+    ExpressionAttributeValues: {
+      ':id': req.params.id,
+    },
+    ExpressionAttributeNames: {
+      '#i': 'id',
+    },
+    KeyConditionExpression: '#i = :id',
   }
-  const data = await docClient.get(params).promise()
-  res.status(200).json(data.Item)
+  const data = await docClient.query(params).promise()
+  res.status(200).json(data.Items[0])
 })
 
 router.post('/rooms', async (req, res) => {
