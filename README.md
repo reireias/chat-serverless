@@ -20,3 +20,10 @@ $ yarn generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+## DynamoDB for local
+
+```console
+$ sls dynamodb install
+$ sls dynamodb start
+```
