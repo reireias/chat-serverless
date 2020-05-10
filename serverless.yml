@@ -3,7 +3,7 @@ service:
 
 plugins:
   - serverless-s3-sync
-  - serverless-apigw-binary
+  # - serverless-apigw-binary
   - serverless-dynamodb-local
 
 package:
@@ -12,10 +12,13 @@ package:
   include:
     - .nuxt/dist/handler.js
     - .nuxt/dist/auth.js
+    - .nuxt/dist/websocket.js
     - .nuxt/dist/server/**
   exclude:
     - .editorconfig
+    - .envrc
     - .eslintrc.js
+    - .dynamodb/**
     - .git/**
     - .gitignore
     - .nuxt/**
@@ -29,17 +32,23 @@ package:
     - layouts/**
     - local.js
     - middleware/**
+    - migrations/**
     - nuxt.config.js
     - package.json
     - pages/**
     - plugins/**
+    - secrets.example.json
+    - secrets.json
     - server/**
     - serverless.yml
     - static/**
     - store/**
     - webpack.config.js
     - yarn.lock
+    - node_modules/.cache/**
     - node_modules/aws-sdk/**
+    - node_modules/webpack/**
+    - node_modules/@babel/**
 
 provider:
   name: aws
@@ -51,6 +60,8 @@ provider:
     AUTH0_CLIENT_ID: ${file(./secrets.json):AUTH0_CLIENT_ID}
     AUTH0_DOMAIN: ${file(./secrets.json):AUTH0_DOMAIN}
     AUTH0_CLIENT_PUBLIC_KEY: ${file(./public_key)}
+  websocketsApiName: websockets-api
+  websocketsApiRouteSelectionExpression: $request.body.action
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -94,6 +105,9 @@ functions:
   auth:
     name: ${self:service}-${self:custom.stackId}-${self:provider.stage}-auth
     handler: .nuxt/dist/auth.handler
+    package:
+      exclude:
+        - node_modules/**
   renderer:
     name: ${self:service}-${self:custom.stackId}-${self:provider.stage}-renderer
     handler: .nuxt/dist/handler.handler
@@ -101,6 +115,9 @@ functions:
     timeout: 30
     environment:
       NODE_ENV: production
+    package:
+      exclude:
+        - node_modules/websocket/**
     events:
       - http:
           path: /
@@ -130,6 +147,17 @@ functions:
             parameters:
               paths:
                 proxy: true
+  connectHandler:
+    handler: .nuxt/dist/websocket.connectHandler
+    events:
+      - websocket:
+          route: $connect
+      - websocket:
+          route: $disconnect
+  defaultHandler:
+    handler: .nuxt/dist/websocket.defaultHandler
+    events:
+      - websocket: $default
 
 resources:
   Resources:
