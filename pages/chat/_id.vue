@@ -61,6 +61,7 @@ export default {
       text: null,
       socket: null,
       messages: [],
+      ws: null,
     }
   },
   computed: {
@@ -68,13 +69,45 @@ export default {
   },
   mounted() {
     this.getRoom({ id: this.$nuxt.$route.params.id })
+    const ws = new WebSocket(
+      'wss://579ghywo75.execute-api.ap-northeast-1.amazonaws.com/dev'
+    )
+    this.ws = ws
+    ws.onopen = this.onOpen
+    ws.onmessage = this.onMessage
   },
   methods: {
-    onPost() {},
+    onPost() {
+      this.ws.send(
+        JSON.stringify({
+          action: 'post',
+          roomId: this.$nuxt.$route.params.id,
+          message: this.text,
+        })
+      )
+      this.text = ''
+    },
     format(timestamp) {
       return moment(timestamp.seconds * 1000).format('YYYY/MM/DD HH:mm:ss')
     },
     ...mapActions(['getRoom']),
+    onOpen(event) {
+      this.ws.send(
+        JSON.stringify({
+          action: 'join',
+          roomId: this.$nuxt.$route.params.id,
+        })
+      )
+    },
+    onMessage(event) {
+      const data = JSON.parse(event.data)
+      this.messages.push({
+        text: data.message,
+        author: '',
+        authorIcon: '',
+      })
+      console.log(event)
+    },
   },
 }
 </script>

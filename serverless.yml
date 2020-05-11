@@ -152,12 +152,21 @@ functions:
     events:
       - websocket:
           route: $connect
+  disconnectHandler:
+    handler: .nuxt/dist/websocket.disconnectHandler
+    events:
       - websocket:
           route: $disconnect
-  defaultHandler:
-    handler: .nuxt/dist/websocket.defaultHandler
+  joinHandler:
+    handler: .nuxt/dist/websocket.joinHandler
     events:
-      - websocket: $default
+      - websocket:
+          route: join
+  postHandler:
+    handler: .nuxt/dist/websocket.postHandler
+    events:
+      - websocket:
+          route: post
 
 resources:
   Resources:
@@ -175,6 +184,9 @@ resources:
             KeyType: HASH
           - AttributeName: id
             KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
         GlobalSecondaryIndexes:
           - IndexName: rooms_id
             KeySchema:
@@ -187,6 +199,20 @@ resources:
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
+    ConnectionTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: connections
+        AttributeDefinitions:
+          - AttributeName: roomId
+            AttributeType: S
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: roomId
+            KeyType: HASH
+          - AttributeName: id
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
