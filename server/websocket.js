@@ -100,7 +100,11 @@ module.exports.postHandler = async (event, context, callback) => {
   for (let item of data.Items) {
     const apiParams = {
       ConnectionId: item.id,
-      Data: JSON.stringify({ message: body.message }),
+      Data: JSON.stringify({
+        message: body.message,
+        author: body.author,
+        authorIcon: body.authorIcon,
+      }),
     }
     try {
       await apigatewaymanagementapi.postToConnection(apiParams).promise()

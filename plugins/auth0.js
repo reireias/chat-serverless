@@ -70,7 +70,10 @@ export default (_, inject) => {
       if (silentCheck) clearTimeout(silentCheck)
 
       lock.logout({
-        returnTo: 'http://localhost:3000/dev/login',
+        returnTo:
+          process.env.NODE_ENV === 'production'
+            ? 'https://fdqm2ixxh4.execute-api.ap-northeast-1.amazonaws.com/dev'
+            : 'http://localhost:3000/dev',
       })
     },
   })

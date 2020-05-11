@@ -13,7 +13,7 @@
         to="/"
         >top</v-btn
       >
-      <v-btn v-if="user" class="toolbar-button" outlined href="/logout"
+      <v-btn v-if="user" class="toolbar-button" outlined @click="onLogout"
         >logout</v-btn
       >
     </v-app-bar>
@@ -26,13 +26,24 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   computed: {
-    ...mapGetters(['user']),
+    ...mapGetters(['user', 'auth']),
   },
-  mounted() {},
+  mounted() {
+    if (!this.user && this.auth && this.auth.accessToken) {
+      this.setUser()
+    }
+  },
+  methods: {
+    onLogout() {
+      this.logout()
+      this.$auth0Lock.logout()
+    },
+    ...mapActions(['setUser', 'logout']),
+  },
 }
 </script>
 

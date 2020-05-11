@@ -9,21 +9,21 @@
     </v-row>
     <v-row v-for="message in messages" :key="message.id" justify="center">
       <v-col
-        :class="user.id == message.author ? 'my-message' : 'other-message'"
+        :class="user.sub == message.author ? 'my-message' : 'other-message'"
         cols="12"
         md="8"
         xl="5"
       >
-        <v-avatar v-if="user.id != message.author">
+        <v-avatar v-if="user.sub != message.author">
           <img :src="message.authorIcon" />
         </v-avatar>
         <v-card
           class="message-card"
-          :color="user.id == message.author ? '#AED581' : 'white'"
+          :color="user.sub == message.author ? '#AED581' : 'white'"
         >
           <v-card-title v-text="message.text"></v-card-title>
         </v-card>
-        <v-avatar v-if="user.id == message.author">
+        <v-avatar v-if="user.sub == message.author">
           <img :src="message.authorIcon" />
         </v-avatar>
       </v-col>
@@ -83,6 +83,8 @@ export default {
           action: 'post',
           roomId: this.$nuxt.$route.params.id,
           message: this.text,
+          author: this.user.sub,
+          authorIcon: this.user.picture,
         })
       )
       this.text = ''
@@ -103,8 +105,8 @@ export default {
       const data = JSON.parse(event.data)
       this.messages.push({
         text: data.message,
-        author: '',
-        authorIcon: '',
+        author: data.author,
+        authorIcon: data.authorIcon,
       })
       console.log(event)
     },

@@ -12,5 +12,6 @@ export default ({ store }, inject) => {
       accessToken,
       idToken,
     })
+    store.dispatch('setUser')
   })
 }

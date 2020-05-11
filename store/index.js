@@ -1,5 +1,6 @@
 import axios from 'axios'
 import cookieparser from 'cookieparser'
+import Cookie from 'js-cookie'
 import nuxtConfig from '~/nuxt.config.js'
 
 const base = nuxtConfig.router.base
@@ -9,22 +10,20 @@ const getHeaders = (idToken) => {
 
 export const state = () => ({
   auth: null,
-  loading: true,
   user: null,
   rooms: [],
   room: null,
 })
 
 export const mutations = {
+  setUser(state, user) {
+    state.user = user
+  },
   setAuth(state, auth) {
     state.auth = auth
   },
   resetAuth(state) {
     state.auth = null
-  },
-  setUser(state, user) {
-    state.user = user
-    state.loading = false
   },
   setRooms(state, rooms) {
     state.rooms = rooms
@@ -58,6 +57,21 @@ export const actions = {
       name: res.data.name,
     })
   },
+  async setUser({ dispatch, commit, state }) {
+    // NOTE: if getProfile failed, accessToken is expired
+    try {
+      const profile = await this.$auth0Lock.getProfile(state.auth.accessToken)
+      commit('setUser', profile)
+    } catch {
+      dispatch('logout')
+      this.$auth0Lock.logout()
+    }
+  },
+  logout({ commit }) {
+    Cookie.remove('_tkn')
+    Cookie.remove('_itkn')
+    commit('resetAuth')
+  },
   nuxtServerInit({ commit }, { req }) {
     if (process.server && req.headers.cookie) {
       const cookies = cookieparser.parse(req.headers.cookie)
@@ -79,8 +93,8 @@ export const getters = {
   user(state) {
     return state.user
   },
-  loading(state) {
-    return state.loading
+  auth(state) {
+    return state.auth
   },
   rooms(state) {
     return state.rooms
