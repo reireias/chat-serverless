@@ -76,7 +76,7 @@ router.delete('/rooms/:id', async (req, res) => {
     Key: {
       owner: userInfo.principalId,
       id: req.params.id,
-    }
+    },
   }
   await docClient.delete(params).promise()
   res.status(200).json({})

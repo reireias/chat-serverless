@@ -1,3 +1,5 @@
+/* eslint standard/no-callback-literal: 0 */
+/* eslint no-console: 0 */
 const jwt = require('jsonwebtoken')
 
 const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID
@@ -24,7 +26,7 @@ const generatePolicy = (principalId, effect, resource) => {
   return authResponse
 }
 
-exports.handler = (event, context, callback) => {
+exports.handler = (event, _context, callback) => {
   console.log('event', event)
   if (!event.authorizationToken) {
     return callback('Unauthorized')

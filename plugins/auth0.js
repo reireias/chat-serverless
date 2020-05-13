@@ -49,14 +49,13 @@ export default (_, inject) => {
 
             this.silentCheck(next, time)
           })
-          .catch((err) => {
-            if (err) console.log(err)
+          .catch((_err) => {
+            // nothing
           })
       }, time || 15 * 60 * 1000)
     },
 
     getProfile(accessToken) {
-      console.log(accessToken)
       return new Promise((resolve, reject) => {
         lock.getUserInfo(accessToken, (err, profile) => {
           if (err) return reject(err)

@@ -108,7 +108,6 @@ export default {
         author: data.author,
         authorIcon: data.authorIcon,
       })
-      console.log(event)
     },
   },
 }
